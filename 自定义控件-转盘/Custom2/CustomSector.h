@@ -13,6 +13,7 @@
 
 @property (nonatomic, assign) CGFloat width;
 @property (nonatomic, assign) CGFloat radius;
-@property (nonatomic, assign) double startAngle;
+
 - (UIBezierPath *)bezierPathWithSector:(SectorLayer *)layer start:(BOOL)isStart;
+
 @end

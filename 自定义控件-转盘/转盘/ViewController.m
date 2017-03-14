@@ -25,13 +25,13 @@
     img.frame = self.view.bounds;
     [self.view insertSubview:img atIndex:0];
     
-//    [self.view addSubview:self.custom1];
+    [self.view addSubview:self.custom1];
 }
 
 - (IBAction)segmentedClick:(UISegmentedControl *)sender {
     if (sender.selectedSegmentIndex == 0) {
         [self.custom2 removeFromSuperview];
-//        [self.view addSubview:self.custom1];
+        [self.view addSubview:self.custom1];
     } else {
         [self.custom1 removeFromSuperview];
         [self.view addSubview:self.custom2];

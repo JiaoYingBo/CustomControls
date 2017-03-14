@@ -21,7 +21,7 @@
 - (void)drawInContext:(CGContextRef)ctx {
     if (_customSector) {
         // 圆弧
-        CGContextSetLineWidth(ctx, 25);
+        CGContextSetLineWidth(ctx, _customSector.width);
         
         UIColor *bottomColor = [UIColor colorWithWhite:1 alpha:0.5];
         UIColor *topColor = [UIColor colorWithWhite:1 alpha:1];
@@ -38,15 +38,18 @@
         CGContextSetLineWidth(ctx, 2.0);
         CGContextSetStrokeColorWithColor(ctx, _color.CGColor);
         
-        CGPoint endInsidePoint = polarToDecart(self.center, _customSector.radius - 15, _endAngle);
-        CGPoint endOutsidePoint = polarToDecart(self.center, _customSector.radius + 15, _endAngle);
+        CGFloat insideRadius = _customSector.radius - _customSector.width/1.7;
+        CGFloat outsideRadius = _customSector.radius + _customSector.width/1.7;
+        
+        CGPoint endInsidePoint = polarToDecart(self.center, insideRadius, _endAngle);
+        CGPoint endOutsidePoint = polarToDecart(self.center, outsideRadius, _endAngle);
         
         CGContextMoveToPoint(ctx, endInsidePoint.x, endInsidePoint.y);
         CGContextAddLineToPoint(ctx, endOutsidePoint.x, endOutsidePoint.y);
         CGContextStrokePath(ctx);
         
-        CGPoint startInsidePoint = polarToDecart(self.center, _customSector.radius - 15, _startAngle);
-        CGPoint startOutsidePoint = polarToDecart(self.center, _customSector.radius + 15, _startAngle);
+        CGPoint startInsidePoint = polarToDecart(self.center, insideRadius, _startAngle);
+        CGPoint startOutsidePoint = polarToDecart(self.center, outsideRadius, _startAngle);
         
         CGContextMoveToPoint(ctx, startInsidePoint.x, startInsidePoint.y);
         CGContextAddLineToPoint(ctx, startOutsidePoint.x, startOutsidePoint.y);
@@ -57,25 +60,34 @@
         CGContextSetStrokeColorWithColor(ctx, _color.CGColor);
         CGContextSetFillColorWithColor(ctx, _color.CGColor);
         
+        CGFloat arcRadius = _customSector.width/2.5;
+        
         CGContextMoveToPoint(ctx, endOutsidePoint.x, endOutsidePoint.y);
-        CGContextAddArc(ctx, endOutsidePoint.x, endOutsidePoint.y, 10, _endAngle - 0.2*M_PI, _endAngle + 0.2*M_PI, 0);
+        CGContextAddArc(ctx, endOutsidePoint.x, endOutsidePoint.y, arcRadius, _endAngle - 0.2*M_PI, _endAngle + 0.2*M_PI, 0);
         CGContextClosePath(ctx);
         CGContextDrawPath(ctx, kCGPathFillStroke);
         
         CGContextMoveToPoint(ctx, startOutsidePoint.x, startOutsidePoint.y);
-        CGContextAddArc(ctx, startOutsidePoint.x, startOutsidePoint.y, 10, _startAngle - 0.2*M_PI, _startAngle + 0.2*M_PI, 0);
+        CGContextAddArc(ctx, startOutsidePoint.x, startOutsidePoint.y, arcRadius, _startAngle - 0.2*M_PI, _startAngle + 0.2*M_PI, 0);
         CGContextClosePath(ctx);
         CGContextDrawPath(ctx, kCGPathFillStroke);
         
         
-        UIBezierPath *beginPath = [_customSector bezierPathWithSector:self start:YES];
-        CGContextAddPath(ctx, beginPath.CGPath);
-        CGContextDrawPath(ctx, kCGPathStroke);
-        UIBezierPath *endPath = [_customSector bezierPathWithSector:self start:NO];
-        CGContextAddPath(ctx, endPath.CGPath);
-        CGContextDrawPath(ctx, kCGPathStroke);
-        
+        [self drawBezierRegionInContext:ctx];
     }
+}
+
+- (void)drawBezierRegionInContext:(CGContextRef)ctx {
+    CGContextSetLineWidth(ctx, 2.0);
+    CGContextSetStrokeColorWithColor(ctx, _color.CGColor);
+    
+    UIBezierPath *beginPath = [_customSector bezierPathWithSector:self start:YES];
+    CGContextAddPath(ctx, beginPath.CGPath);
+    CGContextDrawPath(ctx, kCGPathStroke);
+    
+    UIBezierPath *endPath = [_customSector bezierPathWithSector:self start:NO];
+    CGContextAddPath(ctx, endPath.CGPath);
+    CGContextDrawPath(ctx, kCGPathStroke);
 }
 
 #pragma mark - getter

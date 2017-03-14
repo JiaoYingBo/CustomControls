@@ -17,6 +17,8 @@
 @property (nonatomic, strong) SectorLayer *thirdLayer;
 @property (nonatomic, strong) SectorLayer *currentSector;
 
+@property (nonatomic, assign) double startAngle;
+
 @end
 
 @implementation CustomSector
@@ -47,7 +49,7 @@
     _secondLayer = [SectorLayer layer];
     _secondLayer.contentsScale = [UIScreen mainScreen].scale;
     _secondLayer.customSector = self;
-    _secondLayer.minAngle = 0.6*M_PI+M_PI/15;
+    _secondLayer.minAngle = 0.6*M_PI + M_PI/15;
     _secondLayer.maxAngle = _secondLayer.minAngle + 0.6*M_PI;
     _secondLayer.endAngle = _secondLayer.minAngle;
     _secondLayer.startAngle = _secondLayer.maxAngle;
@@ -57,17 +59,17 @@
     _thirdLayer = [SectorLayer layer];
     _thirdLayer.contentsScale = [UIScreen mainScreen].scale;
     _thirdLayer.customSector = self;
-    _thirdLayer.minAngle = (0.6*M_PI+M_PI/15)*2;
+    _thirdLayer.minAngle = (0.6*M_PI + M_PI/15)*2;
     _thirdLayer.maxAngle = _thirdLayer.minAngle + 0.6*M_PI;
     _thirdLayer.endAngle = _thirdLayer.minAngle;
     _thirdLayer.startAngle = _thirdLayer.maxAngle;
     _thirdLayer.color = [UIColor colorWithRed:(180)/255.0 green:(100)/255.0 blue:(251)/255.0 alpha:1.0];
     [self.layer addSublayer:_thirdLayer];
     
-    [self updateLayerFrames];
+    [self updateLayers];
 }
 
-- (void)updateLayerFrames {
+- (void)updateLayers {
     [CATransaction begin];
     [CATransaction setDisableActions:YES];
     
@@ -84,6 +86,18 @@
     [CATransaction commit];
 }
 
+#pragma mark - setter
+
+- (void)setWidth:(CGFloat)width {
+    _width = width;
+    [self updateLayers];
+}
+
+- (void)setRadius:(CGFloat)radius {
+    _radius = radius;
+    [self updateLayers];
+}
+
 #pragma mark - actions
 
 - (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
@@ -94,7 +108,6 @@
         if ([startPath containsPoint:touchPoint]) {
             sector.moveStart = YES;
             _currentSector = sector;
-            NSLog(@"start");
             return YES;
         }
         
@@ -102,7 +115,6 @@
         if ([endPath containsPoint:touchPoint]) {
             sector.moveStart = NO;
             _currentSector = sector;
-            NSLog(@"end");
             return YES;
         }
     }
@@ -114,22 +126,22 @@
     
     PolarCoordinate polar = decartToPolar(_currentSector.center, touchPoint);
     
-    if (!_currentSector.moveStart) {
-        if (polar.angle >= _currentSector.minAngle && polar.angle<=_currentSector.maxAngle) {
-            _currentSector.startAngle = MIN(polar.angle, _currentSector.endAngle);
+    if (_currentSector.moveStart) {
+        if (polar.angle >= _currentSector.endAngle && polar.angle <= _currentSector.maxAngle) {
+            _currentSector.startAngle = MAX(polar.angle, _currentSector.endAngle);
         } else {
-            _currentSector.startAngle = _currentSector.minAngle;
+            _currentSector.startAngle = _currentSector.maxAngle;
         }
     } else {
-        if (polar.angle >= _currentSector.minAngle && polar.angle<=_currentSector.maxAngle) {
-            _currentSector.endAngle = MAX(polar.angle, _currentSector.startAngle);
+        if (polar.angle >= _currentSector.minAngle && polar.angle <= _currentSector.startAngle) {
+            _currentSector.endAngle = MIN(polar.angle, _currentSector.startAngle);
         } else {
-            _currentSector.endAngle = _currentSector.maxAngle;
+            _currentSector.endAngle = _currentSector.minAngle;
         }
     }
     
     [self sendActionsForControlEvents:UIControlEventValueChanged];
-    [self setNeedsDisplay];
+    [_currentSector setNeedsDisplay];
     
     return YES;
 }
@@ -142,10 +154,11 @@
     _currentSector = nil;
 }
 
-#pragma mark - private method
+#pragma mark - public method
 
 - (UIBezierPath *)bezierPathWithSector:(SectorLayer *)layer start:(BOOL)isStart {
     CGPoint point = isStart ? layer.startPoint : layer.endPoint;
+    
     PolarCoordinate polar = decartToPolar(layer.center, point);
     CGPoint insidePoint1 = polarToDecart(layer.center, polar.radius - 10, polar.angle - 6*M_PI/180);
     CGPoint insidePoint2 = polarToDecart(layer.center, polar.radius - 10, polar.angle + 6*M_PI/180);
