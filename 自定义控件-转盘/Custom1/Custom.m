@@ -207,20 +207,8 @@ static CGPoint polarToDecart(CGPoint startPoint, CGFloat radius, CGFloat angle){
         PolarCoordinate strEndPolar = decartToPolar(sector.centerPoint, sector.endPoint);
         CGPoint strEndPoint = polarToDecart(sector.centerPoint, strEndPolar.radius+50, strEndPolar.angle);
         
-        [self drawString:startString
-                withFont:[UIFont systemFontOfSize:17]
-                andColor:[UIColor whiteColor]
-               andCenter:strstartPoint
-                  andTag:sector.tag
-                  radius:strBeginPolar.radius+50];
-        
-        [self drawString:endString
-                withFont:[UIFont systemFontOfSize:17]
-                andColor:[UIColor whiteColor]
-               andCenter:strEndPoint
-                  andTag:sector.tag
-                  radius:strEndPolar.radius+50];
-        
+        [self drawString:startString withFont:[UIFont systemFontOfSize:17] color:[UIColor whiteColor] center:strstartPoint];
+        [self drawString:endString withFont:[UIFont systemFontOfSize:17] color:[UIColor whiteColor] center:strEndPoint];
         
         // 画触摸区域
 //        [self drawBezier:sector];
@@ -228,14 +216,15 @@ static CGPoint polarToDecart(CGPoint startPoint, CGFloat radius, CGFloat angle){
     
 }
 
-- (void)drawString:(NSString *)string withFont:(UIFont *)font andColor:(UIColor *)color andCenter:(CGPoint)center andTag:(NSInteger)tag radius:(CGFloat)radius {
-    CGPoint point = CGPointMake(center.x -13, center.y -13);
+- (void)drawString:(NSString *)string withFont:(UIFont *)font color:(UIColor *)color center:(CGPoint)center {
     NSMutableDictionary *attr = [NSMutableDictionary dictionaryWithCapacity:2];
     
+    NSDictionary *attribute = @{NSFontAttributeName:font};
+    CGSize size = [string sizeWithAttributes:attribute];
+    CGRect textRect = CGRectMake(center.x-size.width/2, center.y-size.height/2, size.width, size.height);
     [attr setValue:font forKey:NSFontAttributeName];
     [attr setValue:color forKey:NSForegroundColorAttributeName];
-    
-    [string drawAtPoint:point withAttributes:attr];
+    [string drawInRect:textRect withAttributes:attr];
 }
 
 - (void)drawBezier:(Sector *)sector {

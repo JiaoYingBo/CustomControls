@@ -13,6 +13,7 @@
 @interface SectorLayer ()
 
 @property (nonatomic, assign, readwrite) CGPoint center;
+@property (nonatomic, strong) CATextLayer *layer;
 
 @end
 
@@ -20,7 +21,6 @@
 
 - (void)drawInContext:(CGContextRef)ctx {
     if (_customSector) {
-        // 圆弧
         CGContextSetLineWidth(ctx, _customSector.width);
         
         UIColor *bottomColor = [UIColor colorWithWhite:1 alpha:0.5];
@@ -34,7 +34,7 @@
         CGContextAddArc(ctx, self.center.x, self.center.y, _customSector.radius, _endAngle, _startAngle, 0);
         CGContextStrokePath(ctx);
         
-        // 直线
+        
         CGContextSetLineWidth(ctx, 2.0);
         CGContextSetStrokeColorWithColor(ctx, _color.CGColor);
         
@@ -55,7 +55,7 @@
         CGContextAddLineToPoint(ctx, startOutsidePoint.x, startOutsidePoint.y);
         CGContextStrokePath(ctx);
         
-        // 扇形
+        
         CGContextSetLineWidth(ctx, 2.0);
         CGContextSetStrokeColorWithColor(ctx, _color.CGColor);
         CGContextSetFillColorWithColor(ctx, _color.CGColor);
