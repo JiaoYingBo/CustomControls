@@ -15,8 +15,11 @@
 		045AD65D1CC62FC100161159 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 045AD65B1CC62FC100161159 /* LaunchScreen.storyboard */; };
 		045AD6681CC62FC100161159 /* __Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 045AD6671CC62FC100161159 /* __Tests.m */; };
 		045AD6731CC62FC100161159 /* __UITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 045AD6721CC62FC100161159 /* __UITests.m */; };
-		045AD6851CC630FC00161159 /* Custom.m in Sources */ = {isa = PBXBuildFile; fileRef = 045AD6841CC630FC00161159 /* Custom.m */; };
 		0EAF73D81E76A1B4002424CA /* beij.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EAF73D71E76A1B4002424CA /* beij.png */; };
+		0EAF73DD1E778C2E002424CA /* Custom.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EAF73DC1E778C2E002424CA /* Custom.m */; };
+		0EAF73E01E778C64002424CA /* SectorLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EAF73DF1E778C64002424CA /* SectorLayer.m */; };
+		0EAF73E31E778FB3002424CA /* CustomSector.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EAF73E21E778FB3002424CA /* CustomSector.m */; };
+		0EAF73E61E77A99B002424CA /* SectorMath.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EAF73E51E77A99B002424CA /* SectorMath.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,9 +56,15 @@
 		045AD66E1CC62FC100161159 /* 转盘UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "转盘UITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		045AD6721CC62FC100161159 /* __UITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = __UITests.m; sourceTree = "<group>"; };
 		045AD6741CC62FC100161159 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		045AD6831CC630FC00161159 /* Custom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Custom.h; sourceTree = "<group>"; };
-		045AD6841CC630FC00161159 /* Custom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Custom.m; sourceTree = "<group>"; };
 		0EAF73D71E76A1B4002424CA /* beij.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = beij.png; sourceTree = "<group>"; };
+		0EAF73DB1E778C27002424CA /* Custom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Custom.h; sourceTree = "<group>"; };
+		0EAF73DC1E778C2E002424CA /* Custom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Custom.m; sourceTree = "<group>"; };
+		0EAF73DE1E778C64002424CA /* SectorLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SectorLayer.h; sourceTree = "<group>"; };
+		0EAF73DF1E778C64002424CA /* SectorLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SectorLayer.m; sourceTree = "<group>"; };
+		0EAF73E11E778FB3002424CA /* CustomSector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomSector.h; sourceTree = "<group>"; };
+		0EAF73E21E778FB3002424CA /* CustomSector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomSector.m; sourceTree = "<group>"; };
+		0EAF73E41E77A99B002424CA /* SectorMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SectorMath.h; sourceTree = "<group>"; };
+		0EAF73E51E77A99B002424CA /* SectorMath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SectorMath.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,17 +115,10 @@
 		045AD64C1CC62FC100161159 /* 转盘 */ = {
 			isa = PBXGroup;
 			children = (
-				0EAF73D71E76A1B4002424CA /* beij.png */,
-				045AD6501CC62FC100161159 /* AppDelegate.h */,
-				045AD6511CC62FC100161159 /* AppDelegate.m */,
+				0EAF73DA1E778C0A002424CA /* Custom1 */,
+				0EAF73D91E778C0A002424CA /* Custom2 */,
 				045AD6531CC62FC100161159 /* ViewController.h */,
 				045AD6541CC62FC100161159 /* ViewController.m */,
-				045AD6561CC62FC100161159 /* Main.storyboard */,
-				045AD6831CC630FC00161159 /* Custom.h */,
-				045AD6841CC630FC00161159 /* Custom.m */,
-				045AD6591CC62FC100161159 /* Assets.xcassets */,
-				045AD65B1CC62FC100161159 /* LaunchScreen.storyboard */,
-				045AD65E1CC62FC100161159 /* Info.plist */,
 				045AD64D1CC62FC100161159 /* Supporting Files */,
 			);
 			path = "转盘";
@@ -125,6 +127,13 @@
 		045AD64D1CC62FC100161159 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				045AD6501CC62FC100161159 /* AppDelegate.h */,
+				045AD6511CC62FC100161159 /* AppDelegate.m */,
+				045AD6561CC62FC100161159 /* Main.storyboard */,
+				045AD6591CC62FC100161159 /* Assets.xcassets */,
+				045AD65B1CC62FC100161159 /* LaunchScreen.storyboard */,
+				045AD65E1CC62FC100161159 /* Info.plist */,
+				0EAF73D71E76A1B4002424CA /* beij.png */,
 				045AD64E1CC62FC100161159 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -146,6 +155,30 @@
 				045AD6741CC62FC100161159 /* Info.plist */,
 			);
 			path = "转盘UITests";
+			sourceTree = "<group>";
+		};
+		0EAF73D91E778C0A002424CA /* Custom2 */ = {
+			isa = PBXGroup;
+			children = (
+				0EAF73E11E778FB3002424CA /* CustomSector.h */,
+				0EAF73E21E778FB3002424CA /* CustomSector.m */,
+				0EAF73DE1E778C64002424CA /* SectorLayer.h */,
+				0EAF73DF1E778C64002424CA /* SectorLayer.m */,
+				0EAF73E41E77A99B002424CA /* SectorMath.h */,
+				0EAF73E51E77A99B002424CA /* SectorMath.m */,
+			);
+			name = Custom2;
+			path = ../Custom2;
+			sourceTree = "<group>";
+		};
+		0EAF73DA1E778C0A002424CA /* Custom1 */ = {
+			isa = PBXGroup;
+			children = (
+				0EAF73DB1E778C27002424CA /* Custom.h */,
+				0EAF73DC1E778C2E002424CA /* Custom.m */,
+			);
+			name = Custom1;
+			path = ../Custom1;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -280,8 +313,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				045AD6551CC62FC100161159 /* ViewController.m in Sources */,
+				0EAF73E01E778C64002424CA /* SectorLayer.m in Sources */,
 				045AD6521CC62FC100161159 /* AppDelegate.m in Sources */,
-				045AD6851CC630FC00161159 /* Custom.m in Sources */,
+				0EAF73DD1E778C2E002424CA /* Custom.m in Sources */,
+				0EAF73E31E778FB3002424CA /* CustomSector.m in Sources */,
+				0EAF73E61E77A99B002424CA /* SectorMath.m in Sources */,
 				045AD64F1CC62FC100161159 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

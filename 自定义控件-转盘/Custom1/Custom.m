@@ -56,6 +56,7 @@ static CGPoint polarToDecart(CGPoint startPoint, CGFloat radius, CGFloat angle){
 
 @implementation Custom
 
+// 每个区域占0.6π对应的角度，两个区域之间间隔π/15的角度
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         
@@ -133,6 +134,10 @@ static CGPoint polarToDecart(CGPoint startPoint, CGFloat radius, CGFloat angle){
 }
 
 - (void)endTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
+    _currentSector = nil;
+}
+
+- (void)cancelTrackingWithEvent:(UIEvent *)event {
     _currentSector = nil;
 }
 
@@ -218,7 +223,7 @@ static CGPoint polarToDecart(CGPoint startPoint, CGFloat radius, CGFloat angle){
         
         
         // 画触摸区域
-        [self drawBezier:sector];
+//        [self drawBezier:sector];
     }
     
 }
@@ -246,20 +251,20 @@ static CGPoint polarToDecart(CGPoint startPoint, CGFloat radius, CGFloat angle){
 // 创建滑竿的触摸区域
 - (UIBezierPath *)bezierPathWithCenter:(Sector *)sector start:(BOOL)isStart {
     CGPoint point = isStart ? sector.startPoint : sector.endPoint;
-    PolarCoordinate beginPolar = decartToPolar(sector.centerPoint, point);
-    CGPoint beginSmallPoint1 = polarToDecart(sector.centerPoint, beginPolar.radius-10, beginPolar.angle-6*M_PI/180);
-    CGPoint beginSmallPoint2 = polarToDecart(sector.centerPoint, beginPolar.radius-10, beginPolar.angle+6*M_PI/180);
-    CGPoint beginBigPoint1 = polarToDecart(sector.centerPoint, beginPolar.radius+80, beginPolar.angle-6*M_PI/180);
-    CGPoint beginBigPoint2 = polarToDecart(sector.centerPoint, beginPolar.radius+80, beginPolar.angle+6*M_PI/180);
+    PolarCoordinate polar = decartToPolar(sector.centerPoint, point);
+    CGPoint smallPoint1 = polarToDecart(sector.centerPoint, polar.radius-10, polar.angle-6*M_PI/180);
+    CGPoint smallPoint2 = polarToDecart(sector.centerPoint, polar.radius-10, polar.angle+6*M_PI/180);
+    CGPoint bigPoint1 = polarToDecart(sector.centerPoint, polar.radius+80, polar.angle-6*M_PI/180);
+    CGPoint bigPoint2 = polarToDecart(sector.centerPoint, polar.radius+80, polar.angle+6*M_PI/180);
     
-    UIBezierPath *beginPath = [[UIBezierPath alloc] init];
-    [beginPath moveToPoint:CGPointMake(beginSmallPoint1.x, beginSmallPoint1.y)];
-    [beginPath addLineToPoint:CGPointMake(beginSmallPoint2.x, beginSmallPoint2.y)];
-    [beginPath addLineToPoint:CGPointMake(beginBigPoint2.x, beginBigPoint2.y)];
-    [beginPath addLineToPoint:CGPointMake(beginBigPoint1.x, beginBigPoint1.y)];
-    [beginPath addLineToPoint:CGPointMake(beginSmallPoint1.x, beginSmallPoint1.y)];
+    UIBezierPath *path = [[UIBezierPath alloc] init];
+    [path moveToPoint:CGPointMake(smallPoint1.x, smallPoint1.y)];
+    [path addLineToPoint:CGPointMake(smallPoint2.x, smallPoint2.y)];
+    [path addLineToPoint:CGPointMake(bigPoint2.x, bigPoint2.y)];
+    [path addLineToPoint:CGPointMake(bigPoint1.x, bigPoint1.y)];
+    [path addLineToPoint:CGPointMake(smallPoint1.x, smallPoint1.y)];
     
-    return beginPath;
+    return path;
 }
 
 @end
@@ -269,18 +274,18 @@ static CGPoint polarToDecart(CGPoint startPoint, CGFloat radius, CGFloat angle){
 
 - (instancetype)initWithStartAngle:(double)angle color:(UIColor *)color centerPoint:(CGPoint)point {
     if (self = [super init]) {
-        self.color = color;
-        self.minValue = 0.0;      // 最小值
-        self.maxValue = 100.0;    // 最大值
-        self.startValue = 0.0;    // 起始值
-        self.endValue = 100.0;    // 结束值
-        self.centerPoint = point; // 中心点
-        self.minAngle = angle;    // 最小弧度
-        self.maxAngle = self.minAngle+0.6*M_PI;  // 最大弧度
-        self.startAngle = self.minAngle;         // 起始弧度
-        self.endAngle = self.startAngle+0.6*M_PI;// 结束弧度
-        self.startPoint = polarToDecart(self.centerPoint, Circle_Width, self.startAngle); // 起始坐标
-        self.endPoint = polarToDecart(self.centerPoint, Circle_Width, self.endAngle);     // 结束坐标
+        _color = color;
+        _minValue = 0.0;      // 最小值
+        _maxValue = 100.0;    // 最大值
+        _startValue = 0.0;    // 起始值
+        _endValue = 100.0;    // 结束值
+        _centerPoint = point; // 中心点
+        _minAngle = angle;    // 最小弧度
+        _maxAngle = _minAngle+0.6*M_PI;  // 最大弧度
+        _startAngle = _minAngle;         // 起始弧度
+        _endAngle = _startAngle+0.6*M_PI;// 结束弧度
+        _startPoint = polarToDecart(_centerPoint, Circle_Width, _startAngle); // 起始坐标
+        _endPoint = polarToDecart(_centerPoint, Circle_Width, _endAngle);     // 结束坐标
     }
     return self;
 }
