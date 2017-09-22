@@ -27,7 +27,7 @@
     if (self = [super initWithFrame:frame]) {
         _width = 25;
         _radius = 80;
-        _startAngle = 0;
+        _startAngle = 1;
         [self initSubLayers];
     }
     return self;
@@ -49,7 +49,7 @@
     _secondLayer = [SectorLayer layer];
     _secondLayer.contentsScale = [UIScreen mainScreen].scale;
     _secondLayer.customSector = self;
-    _secondLayer.minAngle = 0.6*M_PI + M_PI/15;
+    _secondLayer.minAngle = _startAngle + 0.6*M_PI + M_PI/15;
     _secondLayer.maxAngle = _secondLayer.minAngle + 0.6*M_PI;
     _secondLayer.endAngle = _secondLayer.minAngle;
     _secondLayer.startAngle = _secondLayer.maxAngle;
@@ -59,7 +59,7 @@
     _thirdLayer = [SectorLayer layer];
     _thirdLayer.contentsScale = [UIScreen mainScreen].scale;
     _thirdLayer.customSector = self;
-    _thirdLayer.minAngle = (0.6*M_PI + M_PI/15)*2;
+    _thirdLayer.minAngle = _startAngle + (0.6*M_PI + M_PI/15)*2;
     _thirdLayer.maxAngle = _thirdLayer.minAngle + 0.6*M_PI;
     _thirdLayer.endAngle = _thirdLayer.minAngle;
     _thirdLayer.startAngle = _thirdLayer.maxAngle;
@@ -123,20 +123,47 @@
 
 - (BOOL)continueTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
     CGPoint touchPoint = [touch locationInView:self];
-    
     PolarCoordinate polar = decartToPolar(_currentSector.center, touchPoint);
     
     if (_currentSector.moveStart) {
-        if (polar.angle >= _currentSector.endAngle && polar.angle <= _currentSector.maxAngle) {
-            _currentSector.startAngle = MAX(polar.angle, _currentSector.endAngle);
+        if (_currentSector.maxAngle >= 2*M_PI) {
+            // 超出2π的区间
+            if (polar.angle > 0 && polar.angle <= _currentSector.maxAngle - 2*M_PI) {
+                _currentSector.startAngle = MAX(polar.angle + 2*M_PI, _currentSector.endAngle);
+                NSLog(@"==>%f",MAX(polar.angle + 2*M_PI, _currentSector.endAngle));
+            }
+            // 临界点
+            else if (polar.angle == 0 || polar.angle == 2*M_PI) {
+                _currentSector.startAngle = 2*M_PI;
+            }
+            // 超出最大范围
+//            else if (polar.angle > _currentSector.maxAngle - 2*M_PI) {
+//                _currentSector.startAngle = _currentSector.maxAngle;
+//            }
+            // 未超出的区间
+            else {
+                _currentSector.startAngle = MAX(polar.angle, _currentSector.endAngle);
+                NSLog(@"-->%f",MAX(polar.angle, _currentSector.endAngle));
+            }
         } else {
-            _currentSector.startAngle = _currentSector.maxAngle;
+            if (polar.angle >= _currentSector.endAngle && polar.angle <= _currentSector.maxAngle) {
+                _currentSector.startAngle = MAX(polar.angle, _currentSector.endAngle);
+            } else {
+                _currentSector.startAngle = _currentSector.maxAngle;
+            }
         }
+        
     } else {
-        if (polar.angle >= _currentSector.minAngle && polar.angle <= _currentSector.startAngle) {
-            _currentSector.endAngle = MIN(polar.angle, _currentSector.startAngle);
+        if (_currentSector.maxAngle >= 2*M_PI) {
+            if (polar.angle) {
+                
+            }
         } else {
-            _currentSector.endAngle = _currentSector.minAngle;
+            if (polar.angle >= _currentSector.minAngle && polar.angle <= _currentSector.startAngle) {
+                _currentSector.endAngle = MIN(polar.angle, _currentSector.startAngle);
+            } else {
+                _currentSector.endAngle = _currentSector.minAngle;
+            }
         }
     }
     
